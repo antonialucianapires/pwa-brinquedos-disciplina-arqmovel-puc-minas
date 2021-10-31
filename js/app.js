@@ -77,7 +77,7 @@ var card_brinquedo = function (nome, imagem, valor, whatsapp) {
 };
 
 //cache dinamico
-var cache_dinamico = function(data_json){
+var cache_dinamico = function(datajson){
 
   if('caches' in window){
 
@@ -85,14 +85,14 @@ var cache_dinamico = function(data_json){
 
       caches.delete("brinquedo-app-dinamico").then(function(){
 
-          if(data_json.length > 0){
+          if(datajson.length > 0){
 
-              var files = ['dados.json'];
+              var files = ['/dados.json'];
 
-              for(let i = 0; i<data_json.length; i++){
-                  for(let j = 0; j<data_json[i].brinquedos.length; j++){ 
-                      if(files.indexOf(data_json[i].brinquedos[j].imagem) == -1){
-                          files.push(data_json[i].brinquedos[j].imagem);
+              for(let i = 0; i<datajson.length; i++){
+                  for(let j = 0; j<datajson[i].brinquedos.length; j++){ 
+                      if(files.indexOf(datajson[i].brinquedos[j].imagem) == -1){
+                          files.push(datajson[i].brinquedos[j].imagem);
                       }
                       
                   }
