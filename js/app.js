@@ -41,6 +41,7 @@ ajax.onreadystatechange = function () {
       }
 
       content.innerHTML = html_content;
+      cache_dinamico(datajson);
     }
   }
 };
@@ -74,3 +75,43 @@ var card_brinquedo = function (nome, imagem, valor, whatsapp) {
     "</div>"
   );
 };
+
+//cache dinamico
+var cache_dinamico = function(data_json){
+
+  if('caches' in window){
+
+      console.log("Deletando cache dinâmico antigo");
+
+      caches.delete("brinquedo-app-dinamico").then(function(){
+
+          if(data_json.length > 0){
+
+              var files = ['dados.json'];
+
+              for(let i = 0; i<data_json.length; i++){
+                  for(let j = 0; j<data_json[i].brinquedos.length; j++){ 
+                      if(files.indexOf(data_json[i].brinquedos[j].imagem) == -1){
+                          files.push(data_json[i].brinquedos[j].imagem);
+                      }
+                      
+                  }
+              }
+
+          }
+
+          caches.open("brinquedo-app-dinamico").then(function (cache) {
+
+              cache.addAll(files).then(function (){
+
+                  console.log("Novo cache dinâmico adicionado!");
+
+              });
+
+          });
+
+      });
+
+  }
+
+}
