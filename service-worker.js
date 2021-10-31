@@ -1,6 +1,5 @@
-"use strict";
-
 const CACHE_NAME = "brinquedo-app-estatico";
+
 const FILES_TO_CACHE = [
   "css/bootstrap.min.css",
   "css/styles.css",
@@ -12,11 +11,12 @@ const FILES_TO_CACHE = [
   "imgs/cat_icon.jpg",
   "imgs/offline.png",
   "js/app.js",
-  "js/bootstrap.bundle.min.js",
+  "js/bootstrap.min.js",
+  "js/jquery-3.3.1.slim.min.js",
+  "js/popper.min.js",
   "offline.html",
 ];
 
-//instalação do service worker
 self.addEventListener("install", (evt) => {
   console.log("Service Worker em instalação");
 
@@ -27,4 +27,35 @@ self.addEventListener("install", (evt) => {
     })
   );
   self.skipWaiting();
+});
+
+self.addEventListener("activate", (evt) => {
+  console.log("Service Worker em ativação");
+
+  evt.waitUntil(
+    caches.keys().then((keylist) => {
+      return Promise.all(
+        keylist.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (evt) => {
+  if (evt.request.mode !== "navigate") {
+    return;
+  }
+
+  evt.respondWith(
+    fetch(evt.request).catch(() => {
+      return caches.open(CACHE_NAME).then((cache) => {
+        return cache.match("offline.html");
+      });
+    })
+  );
 });
