@@ -115,3 +115,33 @@ var cache_dinamico = function(datajson){
   }
 
 }
+
+let disparoInstalacao = null;
+const btInstall = document.getElementById("btInstall");
+
+let inicializarInstalacao = function(){
+
+    btInstall.removeAttribute("hidden");
+    btInstall.addEventListener('click', function(){
+
+        disparoInstalacao.prompt();
+
+        disparoInstalacao.userChoice.then((choice) => {
+
+            if(choice.outcome === 'accepted'){
+                console.log("Usuário realizou a instalação");
+            }else{
+                console.log("Usuário NÃO realizou a instalação");
+            }
+
+        });
+
+
+    });
+
+}
+window.addEventListener('beforeinstallprompt', gravarDisparo);
+
+function gravarDisparo(evt){
+    disparoInstalacao = evt;
+}
